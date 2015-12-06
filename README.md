@@ -5,8 +5,6 @@ Bukkit API to assist minigame Creation.
 Official implementation available at
 https://github.com/MartyMcJagger/CraftGames
 
-See the Bukkit Page 
-
 
 Terms of Use / Legal
 ======
