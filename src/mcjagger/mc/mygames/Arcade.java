@@ -2,11 +2,14 @@ package mcjagger.mc.mygames;
 
 import java.util.Set;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.command.PluginCommand;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import mcjagger.mc.mygames.chat.ChatManager;
+import mcjagger.mc.mygames.inventorymenu.InventoryMenuListener;
 import mcjagger.mc.mygames.world.MapConfigManager;
 import mcjagger.mc.mygames.world.MapManager;
 
@@ -15,8 +18,19 @@ public abstract class Arcade extends JavaPlugin {
 	public abstract Set<String> getGames();
 
 	@Override
-	public void onEnable() {
+	public void onLoad() {
 		MyGames.setArcade(this);
+	}
+	
+	@Override
+	public void onEnable() {
+		PluginCommand mygamesCommand = getCommand("mygames");
+		if (mygamesCommand == null)
+			getLogger().severe("MyGames command not found. Until added to plugin.yml, you will not be able to use /mygames.");
+		else
+			mygamesCommand.setExecutor(MyGames.getCommandMap());
+		
+		Bukkit.getPluginManager().registerEvents(new InventoryMenuListener(), this);
 	}
 	
 	public void setEnabled(Game game, boolean enabled) {

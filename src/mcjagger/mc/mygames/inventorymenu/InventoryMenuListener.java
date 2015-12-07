@@ -5,7 +5,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 
-// TODO: Is this even referenced???
 public class InventoryMenuListener implements Listener {
 	
 	public InventoryMenuListener() {

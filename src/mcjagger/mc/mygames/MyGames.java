@@ -26,11 +26,6 @@ public class MyGames {
 			throw new UnsupportedOperationException("Arcade has already been set!");
 		
 		MyGames.arcade = arcade;
-		PluginCommand mygamesCommand = arcade.getCommand("mygames");
-		if (mygamesCommand == null)
-			getLogger().severe("MyGames command not found. Until added to plugin.yml, you will not be able to use /mygames.");
-		else
-			mygamesCommand.setExecutor(commandMap);
 	}
 	
 	public static Arcade getArcade() {
@@ -48,7 +43,9 @@ public class MyGames {
 	}
 	
 	
-	
+	public static CommandMap getCommandMap() {
+		return commandMap;
+	}
 
 	public static boolean registerCommand(String label, Command command) {
 		if (commandMap.getCommand(label) == null) {

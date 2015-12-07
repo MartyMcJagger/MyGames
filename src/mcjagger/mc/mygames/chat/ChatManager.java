@@ -29,4 +29,5 @@ public interface ChatManager {
 	
 	String commandNotRegistered();
 	String actionNotAllowed();
+	String errorOccurred();
 }

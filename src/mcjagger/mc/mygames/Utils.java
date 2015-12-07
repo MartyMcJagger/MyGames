@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.EntityEffect;
 import org.bukkit.Location;
@@ -69,6 +70,8 @@ public class Utils {
 	
 	@SuppressWarnings("unchecked")
 	public static <T> T getRandomItem(Collection<T> items) {
+		if (items == null || items.isEmpty())
+			return null;
 		Random r = new Random();
 		return (T) items.toArray()[r.nextInt(items.size())];
 	}

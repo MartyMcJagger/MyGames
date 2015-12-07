@@ -33,7 +33,7 @@ public abstract class Playable implements Listener {
 	public boolean doDrownDamage(){return false;}
 	
 	public DyeColor[] getSpawnColors(){return null;}
-	public MapLocation[] getLocationTypes(){return new MapLocation[0];}
+	public MapLocation[] getLocationTypes(){return null;}
 	
 	private Set<UUID> players = new HashSet<UUID>();
 	private Set<Module> modules = new HashSet<Module>();
