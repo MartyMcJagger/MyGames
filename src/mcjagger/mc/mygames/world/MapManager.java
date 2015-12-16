@@ -17,6 +17,7 @@ public abstract class MapManager {
 	public abstract boolean setMapName(Game game, String map);
 	public abstract String getMapName(Game game);
 	public abstract World getWorld(Game game);
+	public abstract boolean unloadMap(Game game, boolean removePlayers);
 	
 	public abstract String getRandomMap(Game game);
 	public abstract boolean isMapCompatible(String map, Game game);

@@ -49,11 +49,13 @@ public abstract class Game extends Playable {
 		
 		running = false;
 		
-		
+		MyGames.getLobbyManager().retrievePlayers(this);
 		HandlerList.unregisterAll(gameListener);
 		
 		for (GameModule module : gameModules)
 			module.stopped();
+		
+		MyGames.getWorldManager().unloadMap(this, true);
 		
 		return true;
 	}

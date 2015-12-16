@@ -93,14 +93,15 @@ public abstract class Weapon {
 		if (weapon.isRegistered())
 			return true;
 		
-		try{
+		//try{
 			registeredWeapons.put(weapon.getName(), weapon);
 			weapon.registerNecessaryListeners();
 			return true;
-		} catch (Exception e) {
-			Bukkit.getLogger().severe("Error while registering Weapon: " + weapon.getName());
-			return false;
-		}
+		//} catch (Exception e) {
+		//	e.printStackTrace();
+		//	Bukkit.getLogger().severe("Error while registering Weapon: " + weapon.getName());
+		//	return false;
+		//}
 	}
 	
 	public static ItemStack createWeapon(Class<? extends Weapon> w) {
