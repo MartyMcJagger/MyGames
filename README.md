@@ -1,15 +1,15 @@
 MyGames
 ======
 
-Bukkit Plugin/Library to assist minigame Creation
-
-See the Bukkit Page 
+Bukkit API to assist minigame Creation.
+Official implementation available at
+https://github.com/MartyMcJagger/CraftGames
 
 
 Terms of Use / Legal
 ======
 
-    Copyright (C) 2014 Matthew Merrill
+    Copyright (C) 2015 Matthew Merrill
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -24,9 +24,3 @@ Terms of Use / Legal
     You should have received a copy of the GNU General Public License
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-Download
-======
-
-Do not download unless you agree to the terms above.
-
-Download available at: https://sourceforge.net/projects/mattmerr47-mygames/
