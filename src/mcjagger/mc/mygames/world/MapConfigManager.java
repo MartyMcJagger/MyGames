@@ -52,4 +52,11 @@ public abstract class MapConfigManager {
 	
 	public abstract ItemStack getConfigMenuItem();
 	public abstract boolean isConfigMenuItem(ItemStack is);
+	
+	public abstract boolean isMapLocation(Location loc);
+	public abstract void markMapLocation(MapLocation mapLocation, Location location);
+	public abstract void removeLocation(String key, String locationKey, Location loc);
+	public abstract boolean canHaveMultiple(ItemStack itemStack);
+	public abstract void addLocation(String key, String locationKey, Location loc);
+	public abstract void markMapLocation(String locationKey, boolean multiple, Location location);
 }

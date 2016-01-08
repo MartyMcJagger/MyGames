@@ -7,6 +7,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffectType;
 
+import mcjagger.mc.mygames.MyGames;
+
 public abstract class PlayerClass {
 	
 	public abstract String getName();
@@ -49,6 +51,8 @@ public abstract class PlayerClass {
 			//pc.setup(player);
 			player.getInventory().addItem(pc.getWeapons());
 			player.getInventory().setArmorContents(pc.getArmor());
+		} else {
+			MyGames.debug("Null PlayerClass");
 		}
 	}
 	

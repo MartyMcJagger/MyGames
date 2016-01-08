@@ -1,11 +1,16 @@
 package mcjagger.mc.mygames;
 
+import java.io.File;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
 import java.util.logging.Logger;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
-import org.bukkit.command.PluginCommand;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 
 import mcjagger.mc.mygames.chat.ChatManager;
 import mcjagger.mc.mygames.command.CommandMap;
@@ -19,6 +24,7 @@ public class MyGames {
 	private static Arcade arcade = null;
 	private static Logger logger = null;
 	
+	private static Set<UUID> debuggers = new HashSet<UUID>();
 	
 	
 	public static void setArcade(Arcade arcade) {
@@ -70,11 +76,11 @@ public class MyGames {
 	public static MetadataManager getMetadataManager() {
 		return getArcade().getMetadataManager();
 	}
-	public static MapManager getWorldManager() {
-		return getArcade().getWorldManager();
+	public static MapManager getMapManager() {
+		return getArcade().getMapManager();
 	}
 	public static MapConfigManager getMapConfigManager() {
-		return getArcade().getWorldConfigManager();
+		return getArcade().getMapConfigManager();
 	}
 
 	
@@ -89,7 +95,41 @@ public class MyGames {
 		return getArcade().getSpawnLocation();
 	}
 
+	public static Plugin[] enableSubplugins(File file) {
+		if (!file.exists())
+			file.mkdirs();
+		Plugin[] plugins = Bukkit.getPluginManager().loadPlugins(file);
+		for (Plugin plugin : plugins) {
+			getArcade().getPluginLoader().enablePlugin(plugin);
+		}
+		return plugins;
+	}
+
+	public static void disableSubplugins(Plugin[] plugins) {
+		for (Plugin plugin : plugins)
+			getArcade().getPluginLoader().disablePlugin(plugin);
+	}
 	
 	
+	public static void setDebugging(UUID uuid, boolean debug) {
+		if (debug) {
+			debuggers.add(uuid);
+		} else {
+			debuggers.remove(uuid);
+		}
+	}
 	
+	public static void debug(Object o) {
+		String msg = o.toString();
+		
+		for (UUID uuid : debuggers) {
+			Player player = Bukkit.getPlayer(uuid);
+			if (player == null) {
+				debuggers.remove(player);
+				continue;
+			}
+			
+			player.sendMessage(msg);
+		}
+	}
 }

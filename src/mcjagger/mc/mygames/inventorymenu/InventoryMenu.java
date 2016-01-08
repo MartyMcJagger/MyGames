@@ -64,9 +64,9 @@ public class InventoryMenu {
 				int slot = (rowIndex * 9) + (posInRow) + (sideBuffer);
 				/*
 				try {
-					Bukkit.broadcastMessage("put " + items.get(i).getIcon().getItemMeta().getDisplayName() + " in slot " + (rowIndex * 9) +"+"+ (posInRow) + "+" +  (sideBuffer)  +": " + slot);
+					MyGames.debug("put " + items.get(i).getIcon().getItemMeta().getDisplayName() + " in slot " + (rowIndex * 9) +"+"+ (posInRow) + "+" +  (sideBuffer)  +": " + slot);
 				} catch (Exception e){
-					Bukkit.broadcastMessage("put " + items.get(i).getIcon().getType().name() + " in slot " + slot);
+					MyGames.debug("put " + items.get(i).getIcon().getType().name() + " in slot " + slot);
 					
 				}*/
 				inventory.setItem(slot, items.get(i).getIcon());

@@ -5,8 +5,8 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import mcjagger.mc.mygames.Game;
 import mcjagger.mc.mygames.MyGames;
+import mcjagger.mc.mygames.game.Game;
 
 public abstract class MyGamesCommand extends Command {
 	

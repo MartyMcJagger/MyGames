@@ -1,4 +1,6 @@
-package mcjagger.mc.mygames;
+package mcjagger.mc.mygames.game;
+
+import mcjagger.mc.mygames.Module;
 
 public abstract class GameModule extends Module {
 	

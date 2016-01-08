@@ -3,8 +3,8 @@ package mcjagger.mc.mygames.command.impl;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
-import mcjagger.mc.mygames.Game;
 import mcjagger.mc.mygames.command.MyGamesCommand;
+import mcjagger.mc.mygames.game.Game;
 
 public class StartCommand extends MyGamesCommand {
 	
@@ -13,6 +13,7 @@ public class StartCommand extends MyGamesCommand {
 		
 		this.setPermission("mygames.command.start");
 		this.setUsage("start [game name]");
+		this.setDescription("Force a game to start.");
 	}
 
 	@Override

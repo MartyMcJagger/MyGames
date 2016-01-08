@@ -15,6 +15,7 @@ public class SetupCommand extends MyGamesCommand {
 		
 		this.setPermission("mygames.command.setup");
 		this.setUsage("setup");
+		this.setDescription("Changes your playmode to 'setup' and adds game world configuration tool to your inventory.");
 	}
 
 	@Override

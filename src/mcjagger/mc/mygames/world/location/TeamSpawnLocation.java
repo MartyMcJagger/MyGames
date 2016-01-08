@@ -6,17 +6,26 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Wool;
 
-public class SpawnLocation extends MapLocation {
+public class TeamSpawnLocation extends MapLocation {
 
 	private final DyeColor color;
 		
-	public SpawnLocation(DyeColor color){
+	public TeamSpawnLocation(DyeColor color){
 		this.color = color;
 	}
 	
 	@Override
 	public String configKey() {
-		return "spawn."+color.name();
+		return TeamSpawnLocation.configKey(color);
+	}
+	
+	public static String configKey(DyeColor color) {
+		return "teamspawn."+ color.name();
+	}
+	
+	@Override
+	public boolean canHaveMultiple() {
+		return true;
 	}
 
 	@Override

@@ -1,20 +1,28 @@
 package mcjagger.mc.mygames.modules;
 
 import org.bukkit.Bukkit;
+import org.bukkit.scoreboard.DisplaySlot;
+import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.Scoreboard;
 
-import mcjagger.mc.mygames.Game;
-import mcjagger.mc.mygames.GameModule;
 import mcjagger.mc.mygames.MyGames;
+import mcjagger.mc.mygames.game.Game;
+import mcjagger.mc.mygames.game.GameModule;
+import net.md_5.bungee.api.ChatColor;
 
 public abstract class ModuleGameTimer extends GameModule {
 
 	public abstract void tick(boolean isWarmup);
+	
+	public static final String OBJECTIVE_NAME = "gm.countdown";
 	
 	private final Game game;
 	private int warmupTime = 0;
 	private int runTime = 0;
 	private int ticks = 0;
 	private int period = 100;
+	
+	private Scoreboard scoreboard;
 	
 	public ModuleGameTimer(Game game, int warmupTime, int runTime) {
 		this(game, warmupTime, runTime, 100);
@@ -35,6 +43,13 @@ public abstract class ModuleGameTimer extends GameModule {
 		this.game = game;
 		this.warmupTime = warmupTime;
 		this.runTime = runTime + warmupTime;
+
+		scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
+		Objective obj = scoreboard.registerNewObjective(OBJECTIVE_NAME, "dummy");
+		obj.setDisplayName(ChatColor.GRAY + ChatColor.stripColor(game.getName()));
+		obj.setDisplaySlot(DisplaySlot.SIDEBAR);
+		
+		game.addScoreboard(scoreboard);
 	}
 	
 	private int taskId = -1;
@@ -43,7 +58,8 @@ public abstract class ModuleGameTimer extends GameModule {
 		@Override
 		public void run() {
 			if (ticks >= runTime) {
-				game.stop();
+				MyGames.getLobbyManager().stopGame(game.getName());
+				//game.stop();
 			} else if (ticks >= warmupTime) {
 				tick(false);
 			} else {
@@ -51,6 +67,9 @@ public abstract class ModuleGameTimer extends GameModule {
 			}
 			
 			ticks += period;
+			
+			Objective obj = scoreboard.getObjective(OBJECTIVE_NAME);
+			obj.getScore("Time Remaining:").setScore((runTime - ticks) / 20);
 		}
 		
 	};
@@ -70,8 +89,12 @@ public abstract class ModuleGameTimer extends GameModule {
 	public void started() {
 		super.started();
 		
-		taskId = Bukkit.getScheduler().runTaskTimerAsynchronously(
+		ticks = 0;
+		
+		taskId = Bukkit.getScheduler().runTaskTimer(
 				MyGames.getArcade(), runnable, 0, period).getTaskId();
+		
+		MyGames.getArcade().getScoreboardSwitcher();
 	}
 	
 	/* (non-Javadoc)

@@ -51,7 +51,7 @@ public abstract class Playable implements Listener {
 	public Set<Module> getModules() {
 		return new HashSet<Module>(modules);
 	}
-	public boolean addModule(Module module) {
+	 public boolean addModule(Module module) {
 		return modules.add(module);
 	}
 	public boolean removeModule(Module module) {
@@ -105,6 +105,12 @@ public abstract class Playable implements Listener {
 	public final boolean addPlayer(UUID uuid) {
 		if (canAddPlayer(uuid) && players.add(uuid)) {
 			addedPlayer(uuid);
+			
+			Player player = Bukkit.getPlayer(uuid);
+			if (player != null)
+				for (Module module : modules)
+					module.addedPlayer(player);
+			
 			return true;
 		}
 		
@@ -119,10 +125,16 @@ public abstract class Playable implements Listener {
 	public final boolean removePlayer(UUID uuid) {
 		if (players.remove(uuid)) {
 			removedPlayer(uuid);
+			
+			Player player = Bukkit.getPlayer(uuid);
+			if (player != null)
+				for (Module module : modules)
+					module.removedPlayer(player);
+			
 			return true;
 		}
 		
 		return false;
 	}
-
+	
 }

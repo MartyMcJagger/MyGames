@@ -25,5 +25,6 @@ public abstract class MetadataManager {
 	public abstract String getGame(Player player);
 	public abstract boolean inOtherGame(Player player);
 	public abstract void remove(Player player);
+	public abstract void setMode(Player player, int mode);
 
 }

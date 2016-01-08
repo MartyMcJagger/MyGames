@@ -6,6 +6,8 @@ import java.util.UUID;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 
+import mcjagger.mc.mygames.game.Game;
+
 public abstract class LobbyManager implements Listener {
 	
 	public abstract void joinedGame(Player player, Game game);

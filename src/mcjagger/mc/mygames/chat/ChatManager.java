@@ -1,10 +1,10 @@
 package mcjagger.mc.mygames.chat;
 
-import java.util.ArrayList;
+import java.util.Collection;
 
 import org.bukkit.entity.Player;
 
-import mcjagger.mc.mygames.Game;
+import mcjagger.mc.mygames.game.Game;
 
 public interface ChatManager {
 	
@@ -25,7 +25,7 @@ public interface ChatManager {
 	String gameNotFound(String gameName);
 	String gameHasNoWorlds(Game gm);
 	String gameStart(Game gm);
-	String gameOver(Game gm, ArrayList<String> winners);
+	String gameOver(Game gm, Collection<String> winners);
 	
 	String commandNotRegistered();
 	String actionNotAllowed();

@@ -3,10 +3,12 @@ package mcjagger.mc.mygames.world.location;
 import org.bukkit.Location;
 import org.bukkit.inventory.ItemStack;
 
-public abstract interface MapLocation {
+public abstract class MapLocation {
 	
 	public abstract String configKey();
 	public abstract ItemStack icon();
+	
+	public boolean canHaveMultiple() { return false; }
 /*
 	private Location location = null;
 	

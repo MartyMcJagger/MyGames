@@ -3,6 +3,7 @@ package mcjagger.mc.mygames.command;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
+import mcjagger.mc.mygames.command.impl.DebugCommand;
 import mcjagger.mc.mygames.command.impl.JoinCommand;
 import mcjagger.mc.mygames.command.impl.LeaveCommand;
 import mcjagger.mc.mygames.command.impl.ListCommand;
@@ -24,6 +25,8 @@ public class MyGamesCommandMap extends CommandMap {
 		register("setup", new SetupCommand());
 		register("list", new ListCommand());
 		register("setspawn", new SetSpawnCommand());
+		
+		register("debug", new DebugCommand());
 		
 	}
 

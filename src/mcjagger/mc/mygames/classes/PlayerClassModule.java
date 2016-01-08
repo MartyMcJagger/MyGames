@@ -1,14 +1,12 @@
 package mcjagger.mc.mygames.classes;
 
 import java.util.ArrayList;
-import java.util.UUID;
-import java.util.logging.Level;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import mcjagger.mc.mygames.Game;
-import mcjagger.mc.mygames.GameModule;
+import mcjagger.mc.mygames.MyGames;
+import mcjagger.mc.mygames.game.Game;
+import mcjagger.mc.mygames.game.GameModule;
 import mcjagger.mc.mygames.inventorymenu.InventoryMenu;
 import mcjagger.mc.mygames.inventorymenu.MenuItem;
 import mcjagger.mc.mygames.inventorymenu.MenuItemListener;
@@ -21,6 +19,9 @@ public class PlayerClassModule extends GameModule implements MenuItemListener {
 	
 	public PlayerClassModule(Game game, SelectablePlayerClass[] classes) {
 		super(game);
+		
+		if (classes.length == 0)
+			throw new IllegalArgumentException("Must have at least one argument!");
 		
 		this.classes = classes;
 		
@@ -35,12 +36,11 @@ public class PlayerClassModule extends GameModule implements MenuItemListener {
 		menu = new InventoryMenu("Select a Class!", menuItems);
 	}
 	
-	private void openMenu(UUID uuid) {
-		Player player = Bukkit.getPlayer(uuid);
+	public void openMenu(Player player) {
 		if (player == null)
 			return;
 		
-		Bukkit.getLogger().log(Level.FINEST, "Opened Menu For " + player.getDisplayName());
+		MyGames.debug("Opened Menu For " + player.getDisplayName());
 		InventoryMenu.openMenu(player, menu);
 	}
 
@@ -52,14 +52,17 @@ public class PlayerClassModule extends GameModule implements MenuItemListener {
 		for (SelectablePlayerClass playerClass : classes) {
 			if (playerClass.getName().equals(data)) {
 				PlayerClass.setClass(player, playerClass);
-				break;
+				return;
 			}
 		}
+		
+		MyGames.debug("PlayerClass from menu not found: " + data);
 	}
 
 	@Override
 	public void addedPlayer(Player player) {
-		openMenu(player.getUniqueId());
+		PlayerClass.setClass(player, classes[0]);
+		openMenu(player);
 	}
 
 }

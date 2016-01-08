@@ -15,6 +15,7 @@ public class PlayCommand extends MyGamesCommand {
 		
 		this.setPermission("mygames.command.play");
 		this.setUsage("play");
+		this.setDescription("Sets you up in the 'playing' mode for lobby interactions. It is highly recommend you are in this stage before joining games.");
 	}
 
 	@Override

@@ -24,6 +24,7 @@ public class SetSpawnCommand extends MyGamesCommand {
 		
 		this.setPermission("mygames.command.setspawn");
 		this.setUsage("setspawn [world|location|disable]");
+		this.setDescription("Set MyGames lobby location. 'world' argument sends players to the spawn location of current world. 'location' sends players to your current location. 'disable' defaults to server spawn point.");
 		
 		worldKeywords = Arrays.asList(new String[]{"world", "wor", "w"});
 		locKeywords = Arrays.asList(new String[]{"location", "loc", "l"});

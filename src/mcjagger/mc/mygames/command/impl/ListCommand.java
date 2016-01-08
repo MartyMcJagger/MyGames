@@ -14,6 +14,7 @@ public class ListCommand extends MyGamesCommand {
 		
 		this.setPermission("mygames.command.list");
 		this.setUsage("list");
+		this.setDescription("List all games currently running on the server.");
 	}
 
 	@Override

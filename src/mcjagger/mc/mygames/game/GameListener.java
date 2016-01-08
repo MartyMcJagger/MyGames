@@ -1,4 +1,4 @@
-package mcjagger.mc.mygames;
+package mcjagger.mc.mygames.game;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Arrow;
@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -17,9 +18,14 @@ import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
+
+import mcjagger.mc.mygames.MyGames;
+import mcjagger.mc.mygames.Weapon;
 
 public class GameListener implements Listener {
 	
@@ -32,7 +38,7 @@ public class GameListener implements Listener {
 	@EventHandler
 	public void onLogout(PlayerQuitEvent event) {
 		Game gm = MyGames.getLobbyManager().getGame(MyGames.getLobbyManager().getCurrentGame(event.getPlayer().getUniqueId()));
-		if (gm != null)
+		if (gm != null && game.equals(gm))
 			gm.removePlayer(event.getPlayer().getUniqueId());
 	}
 	
@@ -62,7 +68,7 @@ public class GameListener implements Listener {
 			if (event.getDamager().getUniqueId() == event.getEntity().getUniqueId())
 				return;
 
-			//Bukkit.broadcastMessage(event.getCause().name());
+			//MyGames.debug(event.getCause().name());
 			if (event.getCause() == DamageCause.CUSTOM)
 				return;
 			
@@ -72,11 +78,10 @@ public class GameListener implements Listener {
 			if (game.hasPlayer(damager.getUniqueId()) && game.hasPlayer(victim.getUniqueId())) {
 				
 				if (game.canDamage(damager, victim)) {
-					//TODO: WEAPONS
-					//Weapon weapon = Weapon.parseWeapon(damager.getItemInHand());
-					//if (weapon != null) {
-					//	event.setDamage(weapon.melee(game, damager, victim));
-					//}
+					Weapon weapon = Weapon.parseWeapon(damager.getItemInHand());
+					if (weapon != null) {
+						event.setDamage(weapon.melee(game, damager, victim));
+					}
 				} else {
 					event.setCancelled(true);
 				}
@@ -106,8 +111,6 @@ public class GameListener implements Listener {
 		}
 	}
 	
-	//TODO: MORE WEAPONS
-/*
 	@EventHandler
 	public final void onPlayerClick(PlayerInteractEvent event) {
 		Player player = event.getPlayer();
@@ -144,8 +147,8 @@ public class GameListener implements Listener {
 				event.setCancelled(!weapon.interact(this, player,
 						event.getRightClicked()));
 			}*/
-	/*	}
-	}*/ 
+		}
+	}
 /*
 	@EventHandler
 	public final void onPlayerReload(final PlayerDropItemEvent event) {
@@ -221,13 +224,19 @@ public class GameListener implements Listener {
 		if (!game.hasPlayer(event.getEntity()))
 			return;
 		
+		event.getDrops().clear();
 		event.setDroppedExp(0);
 		event.setKeepLevel(true);
 		event.setDeathMessage(null);
 		
 		event.getEntity().setHealth(20);
-		//game.respawnPlayer(event.getEntity());
-		// TODO: RE-Implement this. ^
+
+		event.setKeepInventory(true);
+		event.getEntity().getInventory().clear();
+		
+		game.playerDied(event.getEntity().getUniqueId());
+		game.respawnPlayer(event.getEntity());
+		
 	}
 
 	@EventHandler
@@ -241,7 +250,7 @@ public class GameListener implements Listener {
 	@EventHandler
 	public void onInvOpen(InventoryOpenEvent event) {
 		Player player = Bukkit.getPlayer(event.getPlayer().getUniqueId());
-		if (game.hasPlayer(player)) {
+		if (game.hasPlayer(player) && !game.allowInventory()) {
 
 		event.getPlayer().closeInventory();
 			event.setCancelled(true);
@@ -253,7 +262,7 @@ public class GameListener implements Listener {
 	@EventHandler
 	public final void onInvClick(InventoryClickEvent event) {
 		Player player = Bukkit.getPlayer(event.getWhoClicked().getUniqueId());
-		if (game.hasPlayer(player)) {
+		if (game.hasPlayer(player) && !game.allowInventory()) {
 
 			event.getWhoClicked().closeInventory();
 			event.setCancelled(true);
@@ -264,7 +273,7 @@ public class GameListener implements Listener {
 
 	@EventHandler
 	public final void onBlockPlaceEvent(BlockPlaceEvent event) {
-		if (game.hasPlayer(event.getPlayer())) {
+		if (game.hasPlayer(event.getPlayer()) && !game.allowBlockPlace) {
 
 			event.setCancelled(true);
 			event.getPlayer().sendMessage(MyGames.getChatManager().actionNotAllowed());
@@ -280,7 +289,7 @@ public class GameListener implements Listener {
 
 	@EventHandler
 	public final void onBlockBreakEvent(BlockBreakEvent event) {
-		if (game.hasPlayer(event.getPlayer())) {
+		if (game.hasPlayer(event.getPlayer()) && !game.allowBlockBreak) {
 
 			event.setCancelled(true);
 			event.getPlayer().sendMessage(MyGames.getChatManager().actionNotAllowed());
@@ -289,7 +298,7 @@ public class GameListener implements Listener {
 	
 	@EventHandler
 	public final void onExplosion(EntityExplodeEvent event){
-		if (MyGames.getWorldManager().getMapName(game).equals(event.getEntity().getWorld()))
+		if (MyGames.getMapManager().getWorld(game).getName().equals(event.getEntity().getWorld().getName()) && !game.allowBlockBreak)
 			event.blockList().clear();
 	}
 

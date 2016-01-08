@@ -1,15 +1,16 @@
 package mcjagger.mc.mygames.classes;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import com.google.common.collect.Lists;
-
 import mcjagger.mc.mygames.Utils;
-import net.md_5.bungee.api.ChatColor;
+import mcjagger.mc.mygames.Weapon;
 
 public abstract class SelectablePlayerClass extends PlayerClass {
 
@@ -23,16 +24,20 @@ public abstract class SelectablePlayerClass extends PlayerClass {
 		ItemStack[] weaps = getPlayerWeapons();
 		
 		ItemStack[] ret = Arrays.copyOf(weaps, weaps.length +1);
-		// TODO: Weapons
-		//ret[weaps.length] = Weapon.createWeapon(PlayerClassChooser.class);
+		ret[weaps.length] = Weapon.createWeapon(PlayerClassChooser.class);
 		
-		return ret;
+		return weaps;//ret;
 	}
 	
 	public final ItemStack menuIcon() {
 		ItemStack is = Utils.namedStack(menuIconMaterial(), getName());
 		ItemMeta im = is.getItemMeta();
-		im.setLore(Lists.asList(ChatColor.GREEN+""+ChatColor.BOLD+"Weapons:", weaponNames()));
+		
+		List<String> lore = new ArrayList<String>();
+		lore.add(ChatColor.GREEN+""+ChatColor.BOLD+"Weapons:");
+		lore.addAll(Arrays.asList(weaponNames()));
+		
+		im.setLore(lore);
 		is.setItemMeta(im);
 		return is;
 	}
@@ -43,9 +48,13 @@ public abstract class SelectablePlayerClass extends PlayerClass {
 		
 		for (int i = 0; i < weapons.length; i++) {
 			ItemStack is = weapons[i];
+			
+			if (is == null)
+				continue;
+			
 			ItemMeta im = is.getItemMeta();
 			
-			if (im.hasDisplayName())
+			if (im != null && im.hasDisplayName())
 				names[i] = im.getDisplayName();
 			else
 				names[i] = is.getType().toString();

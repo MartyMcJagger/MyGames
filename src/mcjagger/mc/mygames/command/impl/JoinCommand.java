@@ -3,8 +3,9 @@ package mcjagger.mc.mygames.command.impl;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import mcjagger.mc.mygames.Game;
+import mcjagger.mc.mygames.MyGames;
 import mcjagger.mc.mygames.command.MyGamesCommand;
+import mcjagger.mc.mygames.game.Game;
 
 public class JoinCommand extends MyGamesCommand {
 	
@@ -13,6 +14,7 @@ public class JoinCommand extends MyGamesCommand {
 		
 		this.setPermission("mygames.command.join");
 		this.setUsage("join [game name]");
+		this.setDescription("Join game of provided name.");
 	}
 
 	@Override
@@ -29,6 +31,8 @@ public class JoinCommand extends MyGamesCommand {
 		
 		if (gm.canAddPlayer(player.getUniqueId()))
 			gm.addPlayer(player.getUniqueId());
+		else
+			player.sendMessage(MyGames.getChatManager().joinLobbyFull(gm));
 		
 		return true;
 	}

@@ -3,8 +3,8 @@ package mcjagger.mc.mygames.command.impl;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import mcjagger.mc.mygames.Game;
 import mcjagger.mc.mygames.command.MyGamesCommand;
+import mcjagger.mc.mygames.game.Game;
 
 public class LeaveCommand extends MyGamesCommand {
 	
@@ -13,6 +13,7 @@ public class LeaveCommand extends MyGamesCommand {
 		
 		this.setPermission("mygames.command.leave");
 		this.setUsage("leave [game name]");
+		this.setDescription("Leave game of provided name.");
 	}
 
 	@Override

@@ -1,6 +1,8 @@
 package mcjagger.mc.mygames;
 
-import static mcjagger.mc.mygames.SnowballBullet.*;
+import static mcjagger.mc.mygames.SnowballBullet.SNOWBALL_BULLET_DMG;
+import static mcjagger.mc.mygames.SnowballBullet.SNOWBALL_BULLET_ID;
+import static mcjagger.mc.mygames.SnowballBullet.SNOWBALL_BULLET_OWNER;
 
 import java.util.List;
 import java.util.Random;
@@ -19,6 +21,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import mcjagger.mc.mygames.effects.ParticleEffects;
+import mcjagger.mc.mygames.game.Game;
 
 public abstract class Gun extends Weapon implements Listener {
 	
@@ -257,6 +260,7 @@ public abstract class Gun extends Weapon implements Listener {
 	@Override
 	public boolean primary(Game game, Player player) {
 		ItemStack is = player.getItemInHand();
+		MyGames.debug("Pew");
 		shootBurst(player, is);
 		
 		return false;
@@ -265,6 +269,7 @@ public abstract class Gun extends Weapon implements Listener {
 	@Override
 	public boolean secondary(Game game, Player player) {
 		ItemStack is = player.getItemInHand();
+		MyGames.debug("Reloading");
 		GunClipData clip = getClipData(is);
 		setClipData(is, clip.reload(this.clipSize()));
 		

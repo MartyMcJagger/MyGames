@@ -5,7 +5,8 @@ import java.util.List;
 import org.bukkit.Location;
 import org.bukkit.World;
 
-import mcjagger.mc.mygames.Game;
+import mcjagger.mc.mygames.game.Game;
+import mcjagger.mc.mygames.world.location.MapLocation;
 
 public abstract class MapManager {
 
@@ -29,6 +30,7 @@ public abstract class MapManager {
 	}
 	
 	public abstract Location getRandomSpawn(Game game);
+	public abstract Location getRandomLocation(Game game, MapLocation... locations);
 	public abstract Location getLocation(Game game, String locationKey);
 
 }

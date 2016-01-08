@@ -1,22 +1,29 @@
 package mcjagger.mc.mygames;
 
+import java.io.File;
 import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scoreboard.Scoreboard;
 
 import mcjagger.mc.mygames.chat.ChatManager;
+import mcjagger.mc.mygames.game.Game;
 import mcjagger.mc.mygames.inventorymenu.InventoryMenuListener;
 import mcjagger.mc.mygames.world.MapConfigManager;
 import mcjagger.mc.mygames.world.MapManager;
 
 public abstract class Arcade extends JavaPlugin {
-		
-	public abstract Set<String> getGames();
 
+	public abstract Set<String> getGames();
+	
+	private Plugin[] plugins;
+	public final Plugin[] getPlugins(){return this.plugins;}
+	
 	@Override
 	public void onLoad() {
 		MyGames.setArcade(this);
@@ -31,6 +38,15 @@ public abstract class Arcade extends JavaPlugin {
 			mygamesCommand.setExecutor(MyGames.getCommandMap());
 		
 		Bukkit.getPluginManager().registerEvents(new InventoryMenuListener(), this);
+		
+		MyGames.enableSubplugins(new File(this.getDataFolder().getAbsolutePath() + File.separator + "plugins"));
+	}
+	
+	@Override
+	public void onDisable() {
+		getLobbyManager().stopAll();
+		
+		MyGames.disableSubplugins(getPlugins());
 	}
 	
 	public void setEnabled(Game game, boolean enabled) {
@@ -65,7 +81,10 @@ public abstract class Arcade extends JavaPlugin {
 	public abstract ConfigManager		getConfigManager();
 	public abstract LobbyManager		getLobbyManager();
 	public abstract MetadataManager		getMetadataManager();
-	public abstract MapManager		getWorldManager();
-	public abstract MapConfigManager 	getWorldConfigManager();
+	public abstract MapManager   		getMapManager();
+	public abstract MapConfigManager 	getMapConfigManager();
+	public abstract ScoreboardSwitcher	getScoreboardSwitcher();
+
+	public abstract Scoreboard getDefaultScoreboard();
 	
 }
