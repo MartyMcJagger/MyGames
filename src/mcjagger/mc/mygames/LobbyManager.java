@@ -18,7 +18,8 @@ public abstract class LobbyManager implements Listener {
 	
 	public abstract boolean addPlayer(Player player, String gameName);
 	public abstract boolean removePlayer(Player player, String gameName);
-
+	public abstract boolean addSpectator(Player player, Game game);
+	
 	public abstract void sendPlayers(Game game);
 	public abstract void retrievePlayers(Game game);
 	

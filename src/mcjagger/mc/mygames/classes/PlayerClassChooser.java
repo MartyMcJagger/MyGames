@@ -3,12 +3,15 @@ package mcjagger.mc.mygames.classes;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
 import mcjagger.mc.mygames.Module;
-import mcjagger.mc.mygames.Weapon;
 import mcjagger.mc.mygames.game.Game;
 import mcjagger.mc.mygames.inventorymenu.InventoryMenu;
+import mcjagger.mc.mygames.weapon.Weapon;
 
 public class PlayerClassChooser extends Weapon {
 
@@ -23,31 +26,22 @@ public class PlayerClassChooser extends Weapon {
 	}
 
 	@Override
-	public boolean primary(Game game, Player player) {
-		return false;
-	}
+	public void primary(Game game, Player player, PlayerInteractEvent event) {}
 
 	@Override
-	public boolean secondary(Game game, Player player) {
-		
+	public void secondary(Game game, Player player, PlayerInteractEvent event) {
 		for (Module gm : game.getModules()) {
 			if (gm instanceof PlayerClassModule) {
 				InventoryMenu.openMenu(player, ((PlayerClassModule)gm).menu);
 			}
 		}
-		
-		return true;
 	}
 
 	@Override
-	public int melee(Game game, Player player, Player victim) {
-		return 2;
-	}
+	public void melee(Game game, Player player, Player victim, EntityDamageByEntityEvent event) {}
 
 	@Override
-	public boolean interact(Game game, Player player, Entity target) {
-		return false;
-	}
+	public void interact(Game game, Player player, Entity target, PlayerInteractEntityEvent event) {}
 
 	@Override
 	public ItemStack getBaseItem() {

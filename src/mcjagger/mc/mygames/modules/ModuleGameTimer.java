@@ -58,8 +58,11 @@ public abstract class ModuleGameTimer extends GameModule {
 		@Override
 		public void run() {
 			if (ticks >= runTime) {
-				MyGames.getLobbyManager().stopGame(game.getName());
-				//game.stop();
+				if (!game.announceWinnersAndStop())
+					game.stop(true, true);
+				if (taskId != -1)
+					Bukkit.getScheduler().cancelTask(taskId);
+				taskId = -1;
 			} else if (ticks >= warmupTime) {
 				tick(false);
 			} else {
@@ -97,17 +100,30 @@ public abstract class ModuleGameTimer extends GameModule {
 		MyGames.getArcade().getScoreboardSwitcher();
 	}
 	
+	/*
+	 * (non-Javadoc)
+	 * @see mcjagger.mc.mygames.game.GameModule#stopping()
+	 */
+	@Override
+	public void stopping() {
+		super.stopping();
+		cancelTimer();
+	}
+	
 	/* (non-Javadoc)
 	 * @see mcjagger.mc.mygames.GameModule#stopped()
 	 */
 	@Override
 	public void stopped() {
 		super.stopped();
-		
+		cancelTimer();
+	}
+	
+	private void cancelTimer() {
 		if (taskId != -1)
 			Bukkit.getScheduler().cancelTask(taskId);
 		
 		taskId = -1;
 	}
-
+	
 }

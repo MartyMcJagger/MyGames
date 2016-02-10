@@ -15,6 +15,7 @@ import org.bukkit.plugin.Plugin;
 import mcjagger.mc.mygames.chat.ChatManager;
 import mcjagger.mc.mygames.command.CommandMap;
 import mcjagger.mc.mygames.command.MyGamesCommandMap;
+import mcjagger.mc.mygames.game.Game;
 import mcjagger.mc.mygames.world.MapConfigManager;
 import mcjagger.mc.mygames.world.MapManager;
 
@@ -95,22 +96,50 @@ public class MyGames {
 		return getArcade().getSpawnLocation();
 	}
 
-	public static Plugin[] enableSubplugins(File file) {
+	/**
+	 * Loads all Sub-Plugins located in the provided file directory
+	 * 
+	 * @param file directory from which to load plugins
+	 * @return Array containing Sub-Plugins loaded from the directory.
+	 */
+	public static Plugin[] loadSubplugins(File file) {
 		if (!file.exists())
 			file.mkdirs();
-		Plugin[] plugins = Bukkit.getPluginManager().loadPlugins(file);
-		for (Plugin plugin : plugins) {
-			getArcade().getPluginLoader().enablePlugin(plugin);
+		else if (!file.isDirectory())
+			throw new UnsupportedOperationException("Found a file \"" + file.getAbsolutePath() + "\" but it is not a directory");
+		return Bukkit.getPluginManager().loadPlugins(file);
+	}
+	
+	/**
+	 * Enables all Sub-Plugins found by the set Arcade's Arcade$getPlugins()
+	 * 
+	 * @throws UnsupportedOperationException when Arcade has not been set.
+	 */
+	public static void enableSubplugins() throws UnsupportedOperationException {
+		for (Plugin plugin : getArcade().getPlugins()) {
+			if (plugin != null)
+				getArcade().getPluginLoader().enablePlugin(plugin);
 		}
-		return plugins;
 	}
 
+
+	/**
+	 * Disables all Sub-Plugins found by the set Arcade's Arcade$getPlugins()
+	 * 
+	 * @throws UnsupportedOperationException when Arcade has not been set.
+	 */
 	public static void disableSubplugins(Plugin[] plugins) {
-		for (Plugin plugin : plugins)
-			getArcade().getPluginLoader().disablePlugin(plugin);
+		for (Plugin plugin : plugins) {
+			if (plugin != null)
+				getArcade().getPluginLoader().disablePlugin(plugin);
+		}
 	}
 	
-	
+	/**
+	 * Marks a player to receive messages for debugging purposes.
+	 * @param uuid player's unique ID
+	 * @param debug whether to receive messages
+	 */
 	public static void setDebugging(UUID uuid, boolean debug) {
 		if (debug) {
 			debuggers.add(uuid);
@@ -118,10 +147,26 @@ public class MyGames {
 			debuggers.remove(uuid);
 		}
 	}
+
+	public static boolean setSpectating(Player player, Game game) {
+		return getLobbyManager().addSpectator(player, game);
+	}
 	
+	/**
+	 * Sends a String to all debugging players as defined by the passed Object's Object$toString() method.
+	 * 
+	 * @param o what to send to all debugging players
+	 */
 	public static void debug(Object o) {
-		String msg = o.toString();
-		
+		debug(o.toString());
+	}
+	
+	/**
+	 * Sends a String to all debugging players.
+	 * 
+	 * @param o what to send to all debugging players
+	 */
+	public static void debug(String msg) {
 		for (UUID uuid : debuggers) {
 			Player player = Bukkit.getPlayer(uuid);
 			if (player == null) {
@@ -132,4 +177,5 @@ public class MyGames {
 			player.sendMessage(msg);
 		}
 	}
+
 }

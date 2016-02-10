@@ -1,4 +1,4 @@
-package mcjagger.mc.mygames;
+package mcjagger.mc.mygames.weapon;
 
 import static mcjagger.mc.mygames.SnowballBullet.SNOWBALL_BULLET_DMG;
 import static mcjagger.mc.mygames.SnowballBullet.SNOWBALL_BULLET_ID;
@@ -17,9 +17,14 @@ import org.bukkit.entity.Snowball;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import mcjagger.mc.mygames.GunListener;
+import mcjagger.mc.mygames.MyGames;
+import mcjagger.mc.mygames.SnowballBullet;
 import mcjagger.mc.mygames.effects.ParticleEffects;
 import mcjagger.mc.mygames.game.Game;
 
@@ -257,33 +262,30 @@ public abstract class Gun extends Weapon implements Listener {
 		}
 	}
 
+
 	@Override
-	public boolean primary(Game game, Player player) {
+	public void primary(Game game, Player player, PlayerInteractEvent event) {
 		ItemStack is = player.getItemInHand();
 		MyGames.debug("Pew");
 		shootBurst(player, is);
-		
-		return false;
 	}
 
 	@Override
-	public boolean secondary(Game game, Player player) {
+	public void secondary(Game game, Player player, PlayerInteractEvent event) {
 		ItemStack is = player.getItemInHand();
 		MyGames.debug("Reloading");
 		GunClipData clip = getClipData(is);
 		setClipData(is, clip.reload(this.clipSize()));
+	}
+
+	@Override
+	public void melee(Game game, Player player, Player victim, EntityDamageByEntityEvent event) {
 		
-		return false;
 	}
 
 	@Override
-	public int melee(Game game, Player player, Player victim) {
-		return 2;
-	}
-
-	@Override
-	public boolean interact(Game game, Player player, Entity target) {
-		return false;
+	public void interact(Game game, Player player, Entity target, PlayerInteractEntityEvent event) {
+		
 	}
 
 } class GunClipData {

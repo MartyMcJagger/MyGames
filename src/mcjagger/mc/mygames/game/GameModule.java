@@ -16,6 +16,12 @@ public abstract class GameModule extends Module {
 	 * Invoked when Game starts
 	 */
 	public void started(){}
+
+	/**
+	 * Invoked when Game is announcing winners
+	 */
+	public void stopping(){}
+	
 	/**
 	 * Invoked when Game ends
 	 */

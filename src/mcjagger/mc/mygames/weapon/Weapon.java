@@ -1,4 +1,4 @@
-package mcjagger.mc.mygames;
+package mcjagger.mc.mygames.weapon;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,10 +10,14 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.TNTPrimed;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.metadata.FixedMetadataValue;
 
+import mcjagger.mc.mygames.MyGames;
 import mcjagger.mc.mygames.game.Game;
 
 public abstract class Weapon {
@@ -35,17 +39,17 @@ public abstract class Weapon {
 	 * Triggered by a Primary Attack, default Left Click.
 	 * @param game = Running Game
 	 * @param player = Who Clicked
-	 * @return Whether to cancel the regular event.
+	 * @param event = relevant event
 	 */
-	public abstract boolean primary(Game game, Player player);
+	public abstract void primary(Game game, Player player, PlayerInteractEvent event);
 	
 	/**
 	 * Triggered by a Secondary Attack, default Right Click.
 	 * @param game = Running Game
 	 * @param player = Who Clicked
-	 * @return Whether to cancel the regular event.
+	 * @param event = relevant event
 	 */
-	public abstract boolean secondary(Game game, Player player);
+	public abstract void secondary(Game game, Player player, PlayerInteractEvent event);
 
 	/**
 	 * Called when a player uses this weapon in a melee attack on someone else.
@@ -53,17 +57,17 @@ public abstract class Weapon {
 	 * @param game
 	 * @param player
 	 * @param victim
-	 * @return How much damage should be done to the victim
+	 * @param event = relevant event
 	 */
-	public abstract int melee(Game game, Player player, Player victim);
+	public abstract void melee(Game game, Player player, Player victim, EntityDamageByEntityEvent event);
 	
 	/**
 	 * Triggered by an interaction with an entity.
 	 * @param game = Running Game
 	 * @param player = Who Clicked
-	 * @return Whether to cancel the regular event.
+	 * @param event = relevant event
 	 */
-	public abstract boolean interact(Game game, Player player, Entity target);
+	public abstract void interact(Game game, Player player, Entity target, PlayerInteractEntityEvent event);
 	
 	public abstract ItemStack getBaseItem();
 	

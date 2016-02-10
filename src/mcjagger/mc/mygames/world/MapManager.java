@@ -20,7 +20,7 @@ public abstract class MapManager {
 	public abstract World getWorld(Game game);
 	public abstract boolean unloadMap(Game game, boolean removePlayers);
 	
-	public abstract String getRandomMap(Game game);
+	//public abstract String getRandomMap(Game game);
 	public abstract boolean isMapCompatible(String map, Game game);
 
 	public static Location listToLoc(List<Double> list, World world) {

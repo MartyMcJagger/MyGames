@@ -25,7 +25,8 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
 import mcjagger.mc.mygames.MyGames;
-import mcjagger.mc.mygames.Weapon;
+import mcjagger.mc.mygames.weapon.BlockWeapon;
+import mcjagger.mc.mygames.weapon.Weapon;
 
 public class GameListener implements Listener {
 	
@@ -80,7 +81,7 @@ public class GameListener implements Listener {
 				if (game.canDamage(damager, victim)) {
 					Weapon weapon = Weapon.parseWeapon(damager.getItemInHand());
 					if (weapon != null) {
-						event.setDamage(weapon.melee(game, damager, victim));
+						weapon.melee(game, damager, victim, event);
 					}
 				} else {
 					event.setCancelled(true);
@@ -122,10 +123,10 @@ public class GameListener implements Listener {
 
 			if (action == Action.LEFT_CLICK_AIR
 					|| action == Action.LEFT_CLICK_BLOCK) {
-				event.setCancelled(weapon.primary(game, player));
+				weapon.primary(game, player, event);
 			} else if (action == Action.RIGHT_CLICK_AIR
-					|| action == Action.RIGHT_CLICK_BLOCK) {
-				event.setCancelled(weapon.secondary(game, player));
+					|| (action == Action.RIGHT_CLICK_BLOCK && player.isSneaking())) {
+				weapon.secondary(game, player, event);
 			}
 		}
 	}
@@ -137,8 +138,7 @@ public class GameListener implements Listener {
 			
 			Weapon weapon = Weapon.parseWeapon(player.getItemInHand());
 			if (weapon != null) {
-				event.setCancelled(!weapon.interact(game, player,
-						event.getRightClicked()));
+				weapon.interact(game, player, event.getRightClicked(), event);
 			}
 			
 			/*
@@ -202,7 +202,7 @@ public class GameListener implements Listener {
 		boolean cancel = false;
 		
 		cancel = ((!game.doFallDamage()) && (event.getCause() == DamageCause.FALL))?true:cancel;
-		cancel = (game.isWarmup())?true:cancel;
+		cancel = (game.state != GameState.RUNNING)?true:cancel;
 		
 		if (cancel) {
 			event.setDamage(0.0);
@@ -273,10 +273,13 @@ public class GameListener implements Listener {
 
 	@EventHandler
 	public final void onBlockPlaceEvent(BlockPlaceEvent event) {
-		if (game.hasPlayer(event.getPlayer()) && !game.allowBlockPlace) {
+	    System.out.println(event.getItemInHand());
+		if (BlockWeapon.isWeapon(event.getItemInHand())) {
+			BlockWeapon.parseWeapon(event.getItemInHand()).secondary(game, event.getPlayer(), event);
+		} else if (game.hasPlayer(event.getPlayer()) && !game.allowBlockPlace) {
 
 			event.setCancelled(true);
-			event.getPlayer().sendMessage(MyGames.getChatManager().actionNotAllowed());
+			//event.getPlayer().sendMessage(MyGames.getChatManager().actionNotAllowed());
 		}
 	}
 

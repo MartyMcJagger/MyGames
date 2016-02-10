@@ -7,20 +7,22 @@ import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.DyeColor;
 import org.bukkit.Location;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
+import mcjagger.mc.mygames.game.JoinResult;
 import mcjagger.mc.mygames.world.location.MapLocation;
 
 public abstract class Playable implements Listener {
 	
-	public abstract String	getName();
-	public abstract boolean	canAddPlayer(UUID uuid);
-	public 			void 	addedPlayer(UUID uuid){}
-	public 			void 	removedPlayer(UUID uuid){}
+	public abstract String		getName();
+	public abstract JoinResult	canAddPlayer(UUID uuid);
+	public 			void 		addedPlayer(UUID uuid){}
+	public 			void 		removedPlayer(UUID uuid){}
 	
 	public void pointScored(UUID uuid, Location location){}
 	public void playerDied(UUID uuid) {}
@@ -36,6 +38,8 @@ public abstract class Playable implements Listener {
 	public MapLocation[] getLocationTypes(){return null;}
 	
 	private Set<UUID> players = new HashSet<UUID>();
+	private Set<String> playerNames = new HashSet<String>();
+	
 	private Set<Module> modules = new HashSet<Module>();
 	
 	
@@ -66,6 +70,10 @@ public abstract class Playable implements Listener {
 	public final Set<UUID> getPlayers() {
 		return new HashSet<UUID>(players);
 	}
+	public final Set<String> getPlayerNames() {
+		return new HashSet<String>(playerNames);
+	}
+	
 	public final int playerCount() {
 		return players.size();
 	}
@@ -78,6 +86,15 @@ public abstract class Playable implements Listener {
 		}
 	}
 	
+	public final void sendTitle(String title, String subtitle) {
+		
+		ConsoleCommandSender sender = Bukkit.getConsoleSender();
+		for (String playerName : playerNames) {
+			Bukkit.dispatchCommand(sender, "title" + playerName + " title " + title);
+			Bukkit.dispatchCommand(sender, "title" + playerName + " subtitle " + title);
+		}
+		
+	}
 	
 	
 	/**
@@ -103,7 +120,7 @@ public abstract class Playable implements Listener {
 	 * @return true if the player set changed as a result of this call
 	 */
 	public final boolean addPlayer(UUID uuid) {
-		if (canAddPlayer(uuid) && players.add(uuid)) {
+		if ((canAddPlayer(uuid) == JoinResult.SUCCESS) && players.add(uuid) & playerNames.add(Bukkit.getOfflinePlayer(uuid).getName())) {
 			addedPlayer(uuid);
 			
 			Player player = Bukkit.getPlayer(uuid);
@@ -123,7 +140,7 @@ public abstract class Playable implements Listener {
 	 * @return true if the player set changed as a result of this call
 	 */
 	public final boolean removePlayer(UUID uuid) {
-		if (players.remove(uuid)) {
+		if (players.remove(uuid) & playerNames.remove(Bukkit.getOfflinePlayer(uuid).getName())) {
 			removedPlayer(uuid);
 			
 			Player player = Bukkit.getPlayer(uuid);

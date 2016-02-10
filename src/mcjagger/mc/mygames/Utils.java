@@ -2,8 +2,14 @@ package mcjagger.mc.mygames;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Random;
+import java.util.Set;
 
 import org.bukkit.ChatColor;
 import org.bukkit.EntityEffect;
@@ -14,6 +20,7 @@ import org.bukkit.entity.Villager;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.metadata.MetadataValue;
+import org.bukkit.scoreboard.Objective;
 
 import com.google.common.collect.Lists;
 
@@ -94,5 +101,82 @@ public class Utils {
 		
 		return is;
 	}
+	
+	/**
+	 *  Returns rankings based on the
+	 *  objective parameter. The contents
+	 *  of the returned list is such that
+	 *  the 'n'th item in the list is a
+	 *  collection containing the 'n'th highest
+	 *  scoring players.
+	 *
+	 * @param entries entries to consider for scoring
+	 * @param objective the criteria by which to rank entries
+	 * @return Rankings as described above.
+	 */
+	public static List<Collection<String>> winnersHighest(Collection<String> entries, Objective objective) {
+		Map<Integer, Set<String>> map = new HashMap<Integer, Set<String>>();
+		for (String entry : entries) {
+			int score = objective.getScore(entry).getScore();
+			Set<String> set = map.get(score);
+			
+			if (set == null)
+				set = new HashSet<String>();
+			
+			set.add(entry);
+			map.put(score, set);
+		}
+		
+		List<Entry<Integer, Set<String>>> list = new ArrayList<Entry<Integer, Set<String>>>();
+		list.addAll(map.entrySet());
+		
+		list.sort(new Comparator<Entry<Integer, Set<String>>>(){
 
+			@Override
+			public int compare(Entry<Integer, Set<String>> arg0, Entry<Integer, Set<String>> arg1) {
+				return arg1.getKey() - arg0.getKey();
+			}
+			
+		});
+		
+		List<Collection<String>> ret = new ArrayList<Collection<String>>();
+		for (Entry<Integer, Set<String>> entry : list) {
+			ret.add(entry.getValue());
+		}
+		
+		return ret;
+	}
+	
+	public static List<Collection<String>> winnersLowest(Collection<String> entries, Objective objective) {
+		Map<Integer, Set<String>> map = new HashMap<Integer, Set<String>>();
+		for (String entry : entries) {
+			int score = objective.getScore(entry).getScore();
+			Set<String> set = map.get(score);
+			
+			if (set == null)
+				set = new HashSet<String>();
+			
+			set.add(entry);
+			map.put(score, set);
+		}
+		
+		List<Entry<Integer, Set<String>>> list = new ArrayList<Entry<Integer, Set<String>>>();
+		list.addAll(map.entrySet());
+		
+		list.sort(new Comparator<Entry<Integer, Set<String>>>(){
+
+			@Override
+			public int compare(Entry<Integer, Set<String>> arg0, Entry<Integer, Set<String>> arg1) {
+				return arg0.getKey() - arg1.getKey();
+			}
+			
+		});
+		
+		List<Collection<String>> ret = new ArrayList<Collection<String>>();
+		for (Entry<Integer, Set<String>> entry : list) {
+			ret.add(entry.getValue());
+		}
+		
+		return ret;
+	}
 }

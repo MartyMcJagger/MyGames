@@ -1,7 +1,9 @@
 package mcjagger.mc.mygames.game;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 import java.util.Set;
 import java.util.UUID;
@@ -10,6 +12,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
+import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.scoreboard.Scoreboard;
 
 import mcjagger.mc.mygames.Module;
@@ -18,9 +21,10 @@ import mcjagger.mc.mygames.Playable;
 import mcjagger.mc.mygames.ScoreboardProvider;
 
 public abstract class Game extends Playable implements ScoreboardProvider {
-
+	
 	public abstract String[] getAliases();
 	//public abstract PointManager getPointManager();
+	public abstract List<Collection<String>> getWinners();
 	
 	public void preparePlayer(Player player){}
 	public void respawnPlayer(Player player){preparePlayer(player);player.teleport(getSpawnLocation(player));}
@@ -33,8 +37,7 @@ public abstract class Game extends Playable implements ScoreboardProvider {
 	private Queue<Scoreboard> scoreboards = new LinkedList<Scoreboard>();
 	private Scoreboard scoreboard = null;
 	
-	private boolean running = false;
-	private boolean warmingUp = false;
+	public GameState state = GameState.STOPPED;
 	
 	public int maxPlayers = 20;
 	public int minPlayers = 4;
@@ -48,12 +51,17 @@ public abstract class Game extends Playable implements ScoreboardProvider {
 		scoreboards.add(getScoreboard());
 	}
 	
+	@Override
+	public final void addedPlayer(UUID uuid) {
+	    MyGames.getLobbyManager().joinedGame(Bukkit.getPlayer(uuid), this);
+	}
+	
 	public void started(){}
 	public final boolean start() {
-		if (running)
+		if (!state.canStart())
 			return false;
 		
-		running = true;
+		state = GameState.RUNNING;
 		
 		MyGames.getLobbyManager().sendPlayers(this);
 		Bukkit.getPluginManager().registerEvents(gameListener, MyGames.getArcade());
@@ -63,31 +71,72 @@ public abstract class Game extends Playable implements ScoreboardProvider {
 		
 		started();
 		
+		tellPlayers(MyGames.getChatManager().gameStart(this));
+		
 		return true;
 	}
 	
 	public void stopped(){}
 	public final boolean stop() {
-		return stop(true);
+		return stop(true, true);
 	}
-	public final boolean stop(boolean clearPlayers) {
-		if (!running)
+	
+	private BukkitTask cooldownTask = null;
+	public final boolean announceWinnersAndStop() {
+		if (!state.canStop())
 			return false;
 		
-		running = false;
+		if (state == GameState.COOLING_DOWN)
+			return false;
+		
+		sendTitle("Game Over!", "See Chat for Winners!");
+		tellPlayers(MyGames.getChatManager().gameOver(this, getWinners()));
+		
+		for (Module module : getModules())
+			if (module instanceof GameModule)
+				((GameModule)module).stopping();
+		
+		cooldownTask = Bukkit.getScheduler().runTaskLater(MyGames.getArcade(), new Runnable(){
+			
+			@Override
+			public void run() {
+				stop(true, false);
+			}
+			
+		}, 15 * 20);
+		
+		return true;
+	}
+	
+	public final boolean stop(boolean unloadMap, boolean announceWinners) {
+		if (!state.canStop())
+			return false;
+		
+		state = GameState.STOPPED;
+		
+		if (cooldownTask != null && Bukkit.getScheduler().isQueued((cooldownTask.getTaskId()))) {
+			cooldownTask.cancel();
+			cooldownTask = null;
+		}
 		
 		MyGames.getLobbyManager().retrievePlayers(this);
 		HandlerList.unregisterAll(gameListener);
 		
 		for (GameModule module : gameModules)
-			module.stopped();
+		module.stopped();
+		
+		if (announceWinners) {
+			tellPlayers(MyGames.getChatManager().gameOver(this, getWinners()));
+		}
 		
 		for (Scoreboard scoreboard : scoreboards) {
 			for (String entry : scoreboard.getEntries())
 				scoreboard.resetScores(entry);
 		}
 		
-		MyGames.getMapManager().unloadMap(this, true);
+		if (unloadMap) {
+			MyGames.getMapManager().unloadMap(this, true);
+		}
 		
 		stopped();
 		
@@ -98,21 +147,24 @@ public abstract class Game extends Playable implements ScoreboardProvider {
 		
 		tellPlayers("Game is restarting!");
 		
-		stop(false);
+		stop(false, false);
 		start();
 	}
 	
 	
 	public boolean isRunning() {
-		return running;
-	}
-	public boolean isWarmup() {
-		return warmingUp;
+		return state.isRunning();
 	}
 	
 	@Override
-	public boolean canAddPlayer(UUID uuid) {
-		return playerCount() < maxPlayers && (!isRunning() || allowJoinInProgress);
+	public JoinResult canAddPlayer(UUID uuid) {
+		
+		if (playerCount() >= maxPlayers) {
+			return JoinResult.MAX_PLAYERS;
+		} else if (isRunning() && !allowJoinInProgress) {
+			return JoinResult.IN_PROGRESS;
+		}
+		return JoinResult.SUCCESS;
 	}
 	
 	@Override
@@ -164,4 +216,7 @@ public abstract class Game extends Playable implements ScoreboardProvider {
 	public void addScoreboard(Scoreboard scoreboard) {
 		scoreboards.add(scoreboard);
 	}
+	
+	
+	
 }

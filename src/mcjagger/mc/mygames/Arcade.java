@@ -1,6 +1,7 @@
 package mcjagger.mc.mygames;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.Set;
 
 import org.bukkit.Bukkit;
@@ -27,10 +28,12 @@ public abstract class Arcade extends JavaPlugin {
 	@Override
 	public void onLoad() {
 		MyGames.setArcade(this);
+		plugins = MyGames.loadSubplugins(new File(this.getDataFolder().getAbsolutePath() + File.separator + "plugins"));
+		MyGames.getLogger().info("Found sub-plugins: " + Arrays.toString(plugins));
 	}
 	
 	@Override
-	public void onEnable() {
+	public void onEnable() {		
 		PluginCommand mygamesCommand = getCommand("mygames");
 		if (mygamesCommand == null)
 			getLogger().severe("MyGames command not found. Until added to plugin.yml, you will not be able to use /mygames.");
@@ -39,7 +42,7 @@ public abstract class Arcade extends JavaPlugin {
 		
 		Bukkit.getPluginManager().registerEvents(new InventoryMenuListener(), this);
 		
-		MyGames.enableSubplugins(new File(this.getDataFolder().getAbsolutePath() + File.separator + "plugins"));
+		MyGames.enableSubplugins();
 	}
 	
 	@Override

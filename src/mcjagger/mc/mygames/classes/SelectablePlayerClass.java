@@ -10,7 +10,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import mcjagger.mc.mygames.Utils;
-import mcjagger.mc.mygames.Weapon;
+import mcjagger.mc.mygames.weapon.Weapon;
 
 public abstract class SelectablePlayerClass extends PlayerClass {
 
