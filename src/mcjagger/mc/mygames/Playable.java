@@ -136,9 +136,7 @@ public abstract class Playable implements Listener {
 	 * @return true if the player set contains this player
 	 */
 	public final boolean hasPlayer(UUID uuid) {
-		boolean ret = players.contains(uuid);
-		Bukkit.broadcastMessage(ret + "");
-		return ret;
+		return players.contains(uuid);
 	}
 	
 	/**
