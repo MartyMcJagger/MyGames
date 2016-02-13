@@ -27,7 +27,15 @@ public abstract class Game extends Playable implements ScoreboardProvider {
 	public abstract List<Collection<String>> getWinners();
 	
 	public void preparePlayer(Player player){}
-	public void respawnPlayer(Player player){preparePlayer(player);player.teleport(getSpawnLocation(player));}
+	public void respawnPlayer(Player player){
+		if (isRunning()) {
+			preparePlayer(player);player.teleport(getSpawnLocation(player));
+		}
+		else {
+			MyGames.setSpectating(player, this);
+		}
+	}
+	
 	public Location getSpawnLocation(Player player){return MyGames.getMapManager().getRandomSpawn(this);}
 	public boolean allowInventory(){return false;}
 	
@@ -90,7 +98,7 @@ public abstract class Game extends Playable implements ScoreboardProvider {
 			return false;
 		
 		sendTitle("Game Over!", "See Chat for Winners!");
-		tellPlayers(MyGames.getChatManager().gameOver(this, getWinners()));
+		tellWorld(MyGames.getChatManager().gameOver(this, getWinners()));
 		
 		for (Module module : getModules())
 			if (module instanceof GameModule)
@@ -126,7 +134,7 @@ public abstract class Game extends Playable implements ScoreboardProvider {
 		module.stopped();
 		
 		if (announceWinners) {
-			tellPlayers(MyGames.getChatManager().gameOver(this, getWinners()));
+			tellWorld(MyGames.getChatManager().gameOver(this, getWinners()));
 		}
 		
 		for (Scoreboard scoreboard : scoreboards) {

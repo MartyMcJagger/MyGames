@@ -196,13 +196,13 @@ public class GameListener implements Listener {
 			return;
 		
 		if (event.getCause() == DamageCause.VOID) {
-			(player).setHealth(0);
+			player.setHealth(0d);
 		}
 		
 		boolean cancel = false;
 		
-		cancel = ((!game.doFallDamage()) && (event.getCause() == DamageCause.FALL))?true:cancel;
-		cancel = (game.state != GameState.RUNNING)?true:cancel;
+		cancel |= (!game.doFallDamage()) && (event.getCause() == DamageCause.FALL);
+		cancel |= game.state != GameState.RUNNING;
 		
 		if (cancel) {
 			event.setDamage(0.0);
@@ -210,12 +210,17 @@ public class GameListener implements Listener {
 			return;
 		}
 
-		/*if (player.getHealth() - event.getDamage() < 1) {
-
-			game.respawnPlayer(player);
+		/*
+		if (player.getHealth() - event.getDamage() < 1) {
 			event.setDamage(0);
 			event.setCancelled(true);
-		}*/
+			
+			if (game.isRunning()) {
+				game.respawnPlayer(player);
+			} else {
+				MyGames.setSpectating(player, game);
+			}
+		}//*/
 	}
 	
 	@EventHandler
@@ -234,9 +239,12 @@ public class GameListener implements Listener {
 		event.setKeepInventory(true);
 		event.getEntity().getInventory().clear();
 		
-		game.playerDied(event.getEntity().getUniqueId());
-		game.respawnPlayer(event.getEntity());
-		
+		if (game.isRunning()) {
+			game.playerDied(event.getEntity().getUniqueId());
+			game.respawnPlayer(event.getEntity());
+		} else {
+			MyGames.setSpectating(event.getEntity(), game);
+		}
 	}
 
 	@EventHandler

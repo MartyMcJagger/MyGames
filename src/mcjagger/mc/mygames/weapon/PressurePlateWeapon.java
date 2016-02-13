@@ -42,10 +42,6 @@ Listener {
 
 	@EventHandler
 	public void pressurePlateEvent(PlayerInteractEvent event) {
-		System.out.println(event.getMaterial());
-		System.out.println(event.getClickedBlock());
-		System.out.println(event.getPlayer());
-
 		Block block = event.getClickedBlock();
 
 		if (event.getAction() == (Action.PHYSICAL) && event.getClickedBlock().getType() == pressurePlateMaterial()

@@ -3,10 +3,12 @@ package mcjagger.mc.mygames;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
+import java.util.function.Predicate;
 
 import org.bukkit.Bukkit;
 import org.bukkit.DyeColor;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
@@ -14,6 +16,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
+import mcjagger.mc.mygames.game.Game;
 import mcjagger.mc.mygames.game.JoinResult;
 import mcjagger.mc.mygames.world.location.MapLocation;
 
@@ -85,6 +88,36 @@ public abstract class Playable implements Listener {
 				player.sendMessage(message);
 		}
 	}
+
+	public final void tellWorld(String message) {
+		
+		World world = MyGames.getMapManager().getWorld((Game) this);
+		
+		MyGames.debug("Telling world: " + message);
+		
+		for (UUID uuid : getPlayers()) {
+			Player player = Bukkit.getPlayer(uuid);
+			if (player != null)
+				player.sendMessage(message);
+		}
+		
+		Set<Player> playersInWorld = new HashSet<Player>(world.getPlayers());
+		playersInWorld.removeIf(new Predicate<Player>(){
+
+			@Override
+			public boolean test(Player t) {
+				// return Playable.this.hasPlayer(t); // To prevent weird PlayerList things.
+				return getPlayers().contains(t.getUniqueId());
+			}});
+		
+		MyGames.debug(playersInWorld);
+		
+		for (Player player  : playersInWorld) {
+			if (player != null)
+				player.sendMessage(message);
+		}
+		
+	}
 	
 	public final void sendTitle(String title, String subtitle) {
 		
@@ -103,7 +136,9 @@ public abstract class Playable implements Listener {
 	 * @return true if the player set contains this player
 	 */
 	public final boolean hasPlayer(UUID uuid) {
-		return players.contains(uuid);
+		boolean ret = players.contains(uuid);
+		Bukkit.broadcastMessage(ret + "");
+		return ret;
 	}
 	
 	/**
