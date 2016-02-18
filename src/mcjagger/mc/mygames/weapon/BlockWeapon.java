@@ -227,8 +227,8 @@ public abstract class BlockWeapon implements Listener {
 		return (name != null) && (isRegistered(name));
 	}
 	
-	public static Weapon[] getRegisteredWeapons() {
-		return registeredWeapons.values().toArray(new Weapon[registeredWeapons.size()]);
+	public static GameWeapon[] getRegisteredWeapons() {
+		return registeredWeapons.values().toArray(new GameWeapon[registeredWeapons.size()]);
 	}
 	
 }

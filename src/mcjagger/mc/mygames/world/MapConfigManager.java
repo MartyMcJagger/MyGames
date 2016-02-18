@@ -59,4 +59,5 @@ public abstract class MapConfigManager {
 	public abstract boolean canHaveMultiple(ItemStack itemStack);
 	public abstract void addLocation(String key, String locationKey, Location loc);
 	public abstract void markMapLocation(String locationKey, boolean multiple, Location location);
+	public abstract List<Location> getLocations(World world, String locationKey);
 }

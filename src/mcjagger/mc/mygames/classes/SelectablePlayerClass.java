@@ -10,7 +10,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import mcjagger.mc.mygames.Utils;
-import mcjagger.mc.mygames.weapon.Weapon;
+import mcjagger.mc.mygames.weapon.ItemWeapon;
 
 public abstract class SelectablePlayerClass extends PlayerClass {
 
@@ -24,7 +24,7 @@ public abstract class SelectablePlayerClass extends PlayerClass {
 		ItemStack[] weaps = getPlayerWeapons();
 		
 		ItemStack[] ret = Arrays.copyOf(weaps, weaps.length +1);
-		ret[weaps.length] = Weapon.createWeapon(PlayerClassChooser.class);
+		ret[weaps.length] = ItemWeapon.createWeapon(PlayerClassChooser.class);
 		
 		return weaps;//ret;
 	}

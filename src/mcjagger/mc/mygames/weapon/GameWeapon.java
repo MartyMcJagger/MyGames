@@ -20,11 +20,11 @@ import org.bukkit.metadata.FixedMetadataValue;
 import mcjagger.mc.mygames.MyGames;
 import mcjagger.mc.mygames.game.Game;
 
-public abstract class Weapon {
+public abstract class GameWeapon {
 	
-	private static HashMap<String, Weapon> registeredWeapons = new HashMap<String, Weapon>();
+	private static HashMap<String, GameWeapon> registeredWeapons = new HashMap<String, GameWeapon>();
 	
-	protected Weapon() {
+	protected GameWeapon() {
 		
 	}
 	
@@ -93,7 +93,7 @@ public abstract class Weapon {
 		return registeredWeapons.containsKey(name); 
 	}
 	
-	public static boolean register(Weapon weapon) {
+	public static boolean register(GameWeapon weapon) {
 		
 		if (weapon.isRegistered())
 			return true;
@@ -109,9 +109,9 @@ public abstract class Weapon {
 		//}
 	}
 	
-	public static ItemStack createWeapon(Class<? extends Weapon> w) {
+	public static ItemStack createWeapon(Class<? extends GameWeapon> w) {
 		
-		Weapon weapon;
+		GameWeapon weapon;
 		
 		try {
 			weapon = w.newInstance();
@@ -145,7 +145,7 @@ public abstract class Weapon {
 		
 	}
 	
-	public static Weapon parseWeapon(ItemStack itemStack) {
+	public static GameWeapon parseWeapon(ItemStack itemStack) {
 		
 		if (itemStack == null)
 			return null;
@@ -182,8 +182,8 @@ public abstract class Weapon {
 		return (name != null) && (isRegistered(name));
 	}
 	
-	public static Weapon[] getRegisteredWeapons() {
-		return registeredWeapons.values().toArray(new Weapon[registeredWeapons.size()]);
+	public static GameWeapon[] getRegisteredWeapons() {
+		return registeredWeapons.values().toArray(new GameWeapon[registeredWeapons.size()]);
 	}
 	
 }

@@ -1,6 +1,7 @@
 package mcjagger.mc.mygames.game;
 
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
@@ -26,7 +27,7 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 
 import mcjagger.mc.mygames.MyGames;
 import mcjagger.mc.mygames.weapon.BlockWeapon;
-import mcjagger.mc.mygames.weapon.Weapon;
+import mcjagger.mc.mygames.weapon.GameWeapon;
 
 public class GameListener implements Listener {
 	
@@ -79,7 +80,7 @@ public class GameListener implements Listener {
 			if (game.hasPlayer(damager.getUniqueId()) && game.hasPlayer(victim.getUniqueId())) {
 				
 				if (game.canDamage(damager, victim)) {
-					Weapon weapon = Weapon.parseWeapon(damager.getItemInHand());
+					GameWeapon weapon = GameWeapon.parseWeapon(damager.getItemInHand());
 					if (weapon != null) {
 						weapon.melee(game, damager, victim, event);
 					}
@@ -116,9 +117,9 @@ public class GameListener implements Listener {
 	public final void onPlayerClick(PlayerInteractEvent event) {
 		Player player = event.getPlayer();
 		if (game.hasPlayer(player.getUniqueId())
-				&& Weapon.isWeapon(event.getItem())) {
+				&& GameWeapon.isWeapon(event.getItem())) {
 			
-			Weapon weapon = (Weapon) Weapon.parseWeapon(event.getItem());
+			GameWeapon weapon = (GameWeapon) GameWeapon.parseWeapon(event.getItem());
 			Action action = event.getAction();
 
 			if (action == Action.LEFT_CLICK_AIR
@@ -136,7 +137,7 @@ public class GameListener implements Listener {
 		Player player = event.getPlayer();
 		if (game.hasPlayer(player.getUniqueId())) {
 			
-			Weapon weapon = Weapon.parseWeapon(player.getItemInHand());
+			GameWeapon weapon = GameWeapon.parseWeapon(player.getItemInHand());
 			if (weapon != null) {
 				weapon.interact(game, player, event.getRightClicked(), event);
 			}
@@ -196,13 +197,18 @@ public class GameListener implements Listener {
 			return;
 		
 		if (event.getCause() == DamageCause.VOID) {
-			player.setHealth(0d);
+			event.setDamage(20d);
+			
+			if (player.getGameMode() == GameMode.SPECTATOR) {
+				MyGames.getLobbyManager().addSpectator(player, game);
+				return;
+			}
 		}
 		
 		boolean cancel = false;
 		
 		cancel |= (!game.doFallDamage()) && (event.getCause() == DamageCause.FALL);
-		cancel |= game.state != GameState.RUNNING;
+		// cancel |= game.state != GameState.RUNNING;
 		
 		if (cancel) {
 			event.setDamage(0.0);
@@ -234,7 +240,7 @@ public class GameListener implements Listener {
 		event.setKeepLevel(true);
 		event.setDeathMessage(null);
 		
-		event.getEntity().setHealth(20);
+		event.getEntity().setHealth(20d);
 
 		event.setKeepInventory(true);
 		event.getEntity().getInventory().clear();

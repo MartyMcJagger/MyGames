@@ -6,9 +6,15 @@ public class MenuItem {
 	
 	private ItemStack icon;
 	private MenuItemListener listener;
+	private String actionCommand = null;
 	private boolean closeAfterClick = true;
 	
 	private String data = "";
+	
+	@Override
+	public String toString() {
+		return icon.getType() + ((actionCommand == null) ? "" : (":" + actionCommand));
+	}
 	
 	public MenuItem(ItemStack icon, MenuItemListener listener) {
 		this.icon = icon;
@@ -20,9 +26,26 @@ public class MenuItem {
 		this.listener = listener;
 		this.closeAfterClick = closeAfterClick;
 	}
+
+	public MenuItem(ItemStack icon, MenuItemListener listener, String actionCommand) {
+		this.icon = icon;
+		this.listener = listener;
+		this.actionCommand = actionCommand;
+	}
+	
+	public MenuItem(ItemStack icon, MenuItemListener listener, String actionCommand, boolean closeAfterClick) {
+		this.icon = icon;
+		this.listener = listener;
+		this.actionCommand = actionCommand;
+		this.closeAfterClick = closeAfterClick;
+	}
 	
 	public ItemStack getIcon(){
 		return icon;
+	}
+	
+	public String getActionCommand() {
+		return actionCommand;
 	}
 	
 	public void setCloseAfterClick(boolean closeAfterClick) {

@@ -28,7 +28,7 @@ import mcjagger.mc.mygames.SnowballBullet;
 import mcjagger.mc.mygames.effects.ParticleEffects;
 import mcjagger.mc.mygames.game.Game;
 
-public abstract class Gun extends Weapon implements Listener {
+public abstract class Gun extends GameWeapon implements Listener {
 	
 	Runnable collisionTask = new Runnable() {
 

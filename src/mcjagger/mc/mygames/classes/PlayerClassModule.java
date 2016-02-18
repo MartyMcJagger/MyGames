@@ -10,7 +10,7 @@ import mcjagger.mc.mygames.game.GameModule;
 import mcjagger.mc.mygames.inventorymenu.InventoryMenu;
 import mcjagger.mc.mygames.inventorymenu.MenuItem;
 import mcjagger.mc.mygames.inventorymenu.MenuItemListener;
-import mcjagger.mc.mygames.weapon.Weapon;
+import mcjagger.mc.mygames.weapon.ItemWeapon;
 
 public class PlayerClassModule extends GameModule implements MenuItemListener {
 
@@ -63,7 +63,7 @@ public class PlayerClassModule extends GameModule implements MenuItemListener {
 	@Override
 	public void addedPlayer(Player player) {
 		PlayerClass.setClass(player, classes[0]);
-		player.getInventory().addItem(Weapon.createWeapon(PlayerClassChooser.class));
+		player.getInventory().addItem(ItemWeapon.createWeapon(PlayerClassChooser.class));
 		openMenu(player);
 	}
 

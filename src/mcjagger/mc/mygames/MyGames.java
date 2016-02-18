@@ -85,9 +85,12 @@ public class MyGames {
 	}
 
 	
-	
+
 	public static boolean toLobby(Player player) {
 		return getArcade().toLobby(player);
+	}
+	public static boolean toLobby(Player player, boolean teleportPlayer) {
+		return getArcade().toLobby(player, true);
 	}
 	public static boolean toSetup(Player player) {
 		return getArcade().toSetup(player);

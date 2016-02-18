@@ -76,6 +76,7 @@ public abstract class Arcade extends JavaPlugin {
 	public abstract boolean joinGame(Player player, Game game);
 
 	public abstract boolean toLobby(Player player);
+	public abstract boolean toLobby(Player player, boolean b);
 	public abstract boolean toSetup(Player player);
 	
 	public abstract Location getSpawnLocation();
