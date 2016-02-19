@@ -56,10 +56,10 @@ public abstract class CommandMap implements CommandExecutor {
 			sender.sendMessage(MyGames.getChatManager().commandNotRegistered());
 			return false;
 		}
-		else if ((command.getPermission() != null)&&(!sender.hasPermission(command.getPermission()))) {
-			sender.sendMessage(command.getPermissionMessage());
-			return true;
-		}
+		//else if ((command.getPermission() != null)&&(!sender.hasPermission(command.getPermission()))) {
+		//	sender.sendMessage(command.getPermissionMessage());
+		//	return true;
+		//}
 		
 		String[] args2 = new String[args.length - 1];
 		for (int i = 0; i < args2.length; i++)

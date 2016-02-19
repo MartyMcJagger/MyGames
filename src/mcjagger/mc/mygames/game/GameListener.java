@@ -264,9 +264,9 @@ public class GameListener implements Listener {
 	@EventHandler
 	public void onInvOpen(InventoryOpenEvent event) {
 		Player player = Bukkit.getPlayer(event.getPlayer().getUniqueId());
-		if (game.hasPlayer(player) && !game.allowInventory()) {
+		if (game.hasPlayer(player) && !game.allowInventory) {
 
-		event.getPlayer().closeInventory();
+			event.getPlayer().closeInventory();
 			event.setCancelled(true);
 			if (player != null)
 				player.sendMessage(MyGames.getChatManager().actionNotAllowed());
@@ -276,7 +276,7 @@ public class GameListener implements Listener {
 	@EventHandler
 	public final void onInvClick(InventoryClickEvent event) {
 		Player player = Bukkit.getPlayer(event.getWhoClicked().getUniqueId());
-		if (game.hasPlayer(player) && !game.allowInventory()) {
+		if (game.hasPlayer(player) && !game.allowInventory) {
 
 			event.getWhoClicked().closeInventory();
 			event.setCancelled(true);
