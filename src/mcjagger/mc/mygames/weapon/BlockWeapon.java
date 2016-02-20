@@ -74,7 +74,8 @@ public abstract class BlockWeapon implements Listener {
 
 	public void melee(Game game, Player player, Player victim, EntityDamageByEntityEvent event) {}
 	public void interact(Game game, Player player, Entity target, PlayerInteractEntityEvent event) {}
-
+	public void blockPlaced(Game game, Player player, Block block){}
+	
 	public final void placeBlock(Game game, Player player, Block block) {
 		block.getState().setType(getType(game, player));
 		block.getState().setData(applyData(game, player, block.getState()));

@@ -1,6 +1,7 @@
 package mcjagger.mc.mygames.modules;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
@@ -8,7 +9,6 @@ import org.bukkit.scoreboard.Scoreboard;
 import mcjagger.mc.mygames.MyGames;
 import mcjagger.mc.mygames.game.Game;
 import mcjagger.mc.mygames.game.GameModule;
-import net.md_5.bungee.api.ChatColor;
 
 public abstract class ModuleGameTimer extends GameModule {
 

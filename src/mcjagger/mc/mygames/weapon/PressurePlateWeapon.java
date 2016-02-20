@@ -17,9 +17,7 @@ import org.bukkit.inventory.ItemStack;
 import mcjagger.mc.mygames.MyGames;
 import mcjagger.mc.mygames.game.Game;
 
-public abstract class PressurePlateWeapon extends BlockWeapon
-implements
-Listener {
+public abstract class PressurePlateWeapon extends BlockWeapon implements Listener {
 
 	public abstract void triggered(Game game, Player player, Block block);
 

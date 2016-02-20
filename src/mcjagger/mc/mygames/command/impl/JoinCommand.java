@@ -3,6 +3,7 @@ package mcjagger.mc.mygames.command.impl;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import mcjagger.mc.mygames.MyGames;
 import mcjagger.mc.mygames.command.MyGamesCommand;
 import mcjagger.mc.mygames.game.Game;
 import mcjagger.mc.mygames.game.JoinResult;
@@ -32,7 +33,7 @@ public class JoinCommand extends MyGamesCommand {
 		JoinResult joinResult = gm.canAddPlayer(player.getUniqueId());
 		
 		if (joinResult == JoinResult.SUCCESS)
-			gm.addPlayer(player.getUniqueId());
+			MyGames.getLobbyManager().addPlayer(player, gm.getName());
 		else
 			player.sendMessage(joinResult.prefixedMessage(gm));
 		
