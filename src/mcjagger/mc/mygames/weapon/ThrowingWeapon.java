@@ -30,9 +30,7 @@ public abstract class ThrowingWeapon extends GameWeapon implements Listener {
 	}
 	
 	@Override
-	public void primary(Game game, Player player, PlayerInteractEvent event) {
-		event.setCancelled(true);
-	}
+	public void primary(Game game, Player player, PlayerInteractEvent event) {}
 
 	@Override
 	public void secondary(Game game, Player player, PlayerInteractEvent event) {
@@ -62,9 +60,7 @@ public abstract class ThrowingWeapon extends GameWeapon implements Listener {
 	}
 
 	@Override
-	public void interact(Game game, Player player, Entity target, PlayerInteractEntityEvent event) {
-		
-	}
+	public void interact(Game game, Player player, Entity target, PlayerInteractEntityEvent event) {}
 	
 	@Override
 	public void registerNecessaryListeners() {

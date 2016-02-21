@@ -30,8 +30,6 @@ public class WeaponListener implements Listener {
 			if (weapon != null) {
 				weapon.melee(damager, victim, event);
 			}
-		} else {
-			event.setCancelled(true);
 		}
 	}
 	

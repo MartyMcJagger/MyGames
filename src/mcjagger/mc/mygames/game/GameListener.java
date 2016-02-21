@@ -3,7 +3,9 @@ package mcjagger.mc.mygames.game;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Arrow;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.EventHandler;
@@ -11,6 +13,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
@@ -24,6 +28,8 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.event.weather.WeatherChangeEvent;
+import org.bukkit.event.world.ChunkLoadEvent;
 
 import mcjagger.mc.mygames.MyGames;
 import mcjagger.mc.mygames.weapon.BlockWeapon;
@@ -317,6 +323,36 @@ public class GameListener implements Listener {
 	public final void onExplosion(EntityExplodeEvent event){
 		if (MyGames.getMapManager().getWorld(game).getName().equals(event.getEntity().getWorld().getName()) && !game.allowBlockBreak)
 			event.blockList().clear();
+	}
+
+	@EventHandler
+	public void onWeatherChange(WeatherChangeEvent event) {
+		if (game.isRunning() && MyGames.getMapManager().getWorld(game).equals(event.getWorld())) {
+			if (event.toWeatherState())
+				event.setCancelled(true);
+			event.getWorld().setStorm(false);
+			event.getWorld().setThundering(false);
+		}
+	}
+	
+	@EventHandler
+	public void onWeatherChange(ChunkLoadEvent event) {
+		if (game.isRunning() && MyGames.getMapManager().getWorld(game).equals(event.getWorld())) {
+			for (Entity entity : event.getChunk().getEntities())
+				if (entity instanceof LivingEntity && !(entity instanceof Player) && entity.getCustomName() == null)
+					entity.remove();
+		}
+	}
+
+	@EventHandler
+	public void onEntitySpawn(CreatureSpawnEvent event) {
+		if (game.isRunning() && MyGames.getMapManager().getWorld(game).equals(event.getEntity().getWorld())) {
+			if (event.getSpawnReason() == SpawnReason.NATURAL
+					|| event.getSpawnReason() == SpawnReason.CHUNK_GEN) {
+				event.setCancelled(true);
+				event.getEntity().remove();
+			}
+		}
 	}
 
 }

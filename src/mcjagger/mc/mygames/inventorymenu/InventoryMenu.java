@@ -88,8 +88,8 @@ public class InventoryMenu {
 					
 					for (i = 0; i < subList.size(); i++) {
 						int slot = (rowIndex * 9) + positions[i];
-						inventory.setItem(slot, items.get(i).getIcon());
-						layout.put(slot, items.get(i));
+						inventory.setItem(slot, subList.get(i).getIcon());
+						layout.put(slot, subList.get(i));
 						MyGames.debug("adding to slot " + slot + ", row " + rowIndex + ", pos " + posInRow + ", buffer " + sideBuffer);
 						
 					}
