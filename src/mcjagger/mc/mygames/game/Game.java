@@ -10,6 +10,7 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.scheduler.BukkitTask;
@@ -35,6 +36,7 @@ public abstract class Game extends Playable implements ScoreboardProvider {
 			MyGames.setSpectating(player, this);
 		}
 	}
+	public void announceMVP() {}
 	
 	public Location getSpawnLocation(Player player){return MyGames.getMapManager().getRandomSpawn(this);}
 	public boolean allowInventory(){return false;}
@@ -52,6 +54,8 @@ public abstract class Game extends Playable implements ScoreboardProvider {
 	
 	public boolean allowBlockBreak = false;
 	public boolean allowBlockPlace = false;
+	public Set<Material> allowedBlockBreak = new HashSet<Material>();
+	
 	public boolean allowInventory = false;
 	public boolean allowJoinInProgress = true;
 	
@@ -97,12 +101,18 @@ public abstract class Game extends Playable implements ScoreboardProvider {
 		if (state == GameState.COOLING_DOWN)
 			return false;
 		
+		state = GameState.COOLING_DOWN;
+		
 		sendTitle("Game Over!", "See Chat for Winners!");
 		tellWorld(MyGames.getChatManager().gameOver(this, getWinners()));
+		announceMVP();
 		
 		for (Module module : getModules())
 			if (module instanceof GameModule)
 				((GameModule)module).stopping();
+		
+		if (cooldownTask != null)
+			return false;
 		
 		cooldownTask = Bukkit.getScheduler().runTaskLater(MyGames.getArcade(), new Runnable(){
 			
@@ -122,8 +132,9 @@ public abstract class Game extends Playable implements ScoreboardProvider {
 		
 		state = GameState.STOPPED;
 		
-		if (cooldownTask != null && Bukkit.getScheduler().isQueued((cooldownTask.getTaskId()))) {
-			cooldownTask.cancel();
+		if (cooldownTask != null) {
+			if (Bukkit.getScheduler().isQueued((cooldownTask.getTaskId())))
+				cooldownTask.cancel();
 			cooldownTask = null;
 		}
 		
@@ -131,10 +142,11 @@ public abstract class Game extends Playable implements ScoreboardProvider {
 		HandlerList.unregisterAll(gameListener);
 		
 		for (GameModule module : gameModules)
-		module.stopped();
+			module.stopped();
 		
 		if (announceWinners) {
 			tellWorld(MyGames.getChatManager().gameOver(this, getWinners()));
+			announceMVP();
 		}
 		
 		for (Scoreboard scoreboard : scoreboards) {
@@ -223,6 +235,9 @@ public abstract class Game extends Playable implements ScoreboardProvider {
 	
 	public void addScoreboard(Scoreboard scoreboard) {
 		scoreboards.add(scoreboard);
+	}
+	public void removeScoreboard(Scoreboard scoreboard) {
+		scoreboards.remove(scoreboard);
 	}
 	
 	

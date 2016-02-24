@@ -49,7 +49,6 @@ public abstract class ModuleGameTimer extends GameModule {
 		obj.setDisplayName(ChatColor.GRAY + ChatColor.stripColor(game.getName()));
 		obj.setDisplaySlot(DisplaySlot.SIDEBAR);
 		
-		game.addScoreboard(scoreboard);
 	}
 	
 	private int taskId = -1;
@@ -97,7 +96,7 @@ public abstract class ModuleGameTimer extends GameModule {
 		taskId = Bukkit.getScheduler().runTaskTimer(
 				MyGames.getArcade(), runnable, 0, period).getTaskId();
 		
-		MyGames.getArcade().getScoreboardSwitcher();
+		game.addScoreboard(scoreboard);
 	}
 	
 	/*
@@ -107,6 +106,7 @@ public abstract class ModuleGameTimer extends GameModule {
 	@Override
 	public void stopping() {
 		super.stopping();
+		game.removeScoreboard(scoreboard);
 		cancelTimer();
 	}
 	

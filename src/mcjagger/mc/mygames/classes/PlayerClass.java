@@ -34,7 +34,10 @@ public abstract class PlayerClass {
 	 * @param pc
 	 */
 	public static void setClass(Player player, PlayerClass pc) {
-		classes.put(player.getUniqueId(), pc.getIdentifier());
+		if (pc == null)
+			classes.remove(player.getUniqueId());
+		else
+			classes.put(player.getUniqueId(), pc.getIdentifier());
 	}
 	
 	public static PlayerClass getClass(Player player) {

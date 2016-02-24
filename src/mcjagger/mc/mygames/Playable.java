@@ -69,6 +69,9 @@ public abstract class Playable implements Listener {
 	}
 	
 	
+	public final void clearPlayers() {
+		players.clear();
+	}
 	
 	public final Set<UUID> getPlayers() {
 		return new HashSet<UUID>(players);

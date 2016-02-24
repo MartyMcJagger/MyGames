@@ -66,5 +66,9 @@ public class PlayerClassModule extends GameModule implements MenuItemListener {
 		player.getInventory().addItem(ItemWeapon.createWeapon(PlayerClassChooser.class));
 		openMenu(player);
 	}
-
+	
+	@Override
+	public void removedPlayer(Player player) {
+		PlayerClass.setClass(player, null);
+	}
 }

@@ -38,4 +38,5 @@ public abstract class LobbyManager implements Listener {
 	public abstract Set<String> getGameNames();
 
 	public abstract void stopAll();
+	public abstract void clear(Player player);
 }

@@ -108,7 +108,7 @@ public abstract class ThrowingWeapon extends GameWeapon implements Listener {
 				}//*/
 				
 				
-				//event.setDamage(0);
+				event.setDamage(getDamage());
 				//event.setCancelled(true);
 				/*if (event.getEntity() instanceof LivingEntity) {
 					double dmg = ((LivingEntity)event.getEntity()).getMaxHealth();
@@ -144,5 +144,9 @@ public abstract class ThrowingWeapon extends GameWeapon implements Listener {
 				}
 			//}
 		}
+	}
+
+	public double getDamage() {
+		return 5.0;
 	}
 }

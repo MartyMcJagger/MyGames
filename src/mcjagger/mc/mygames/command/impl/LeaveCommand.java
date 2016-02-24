@@ -3,6 +3,7 @@ package mcjagger.mc.mygames.command.impl;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import mcjagger.mc.mygames.MyGames;
 import mcjagger.mc.mygames.command.MyGamesCommand;
 import mcjagger.mc.mygames.game.Game;
 
@@ -28,7 +29,7 @@ public class LeaveCommand extends MyGamesCommand {
 		if (gm == null)
 			return true;
 		
-		gm.removePlayer(player.getUniqueId());
+		MyGames.getLobbyManager().removePlayer(player, gm.getName());
 		
 		return true;
 	}

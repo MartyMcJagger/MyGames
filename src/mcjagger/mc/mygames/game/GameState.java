@@ -23,7 +23,7 @@ public enum GameState {
 	}
 	
 	public boolean canStop() {
-		return id > 0 && this != COOLING_DOWN;
+		return id > 0;
 	}
 	
 }

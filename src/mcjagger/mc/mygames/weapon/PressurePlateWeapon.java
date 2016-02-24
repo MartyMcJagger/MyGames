@@ -57,6 +57,10 @@ public abstract class PressurePlateWeapon extends BlockWeapon implements Listene
 						games.add(gameName);
 					
 					Game game = MyGames.getLobbyManager().getGame(gameName);
+					
+					if (game == null)
+						return;
+					
 					triggered(game, event.getPlayer(), event.getClickedBlock());
 				}
 			}

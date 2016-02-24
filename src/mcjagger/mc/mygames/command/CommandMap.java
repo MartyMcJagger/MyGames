@@ -8,6 +8,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
 import mcjagger.mc.mygames.MyGames;
+import org.bukkit.ChatColor;
 
 public abstract class CommandMap implements CommandExecutor {
 	
@@ -56,10 +57,10 @@ public abstract class CommandMap implements CommandExecutor {
 			sender.sendMessage(MyGames.getChatManager().commandNotRegistered());
 			return false;
 		}
-		//else if ((command.getPermission() != null)&&(!sender.hasPermission(command.getPermission()))) {
-		//	sender.sendMessage(command.getPermissionMessage());
-		//	return true;
-		//}
+		else if ((command.getPermission() != null)&&(!sender.hasPermission(command.getPermission()))) {
+			sender.sendMessage(MyGames.getChatManager().prefix() + ChatColor.RED + "You don't have permission for this.");
+			return true;
+		}
 		
 		String[] args2 = new String[args.length - 1];
 		for (int i = 0; i < args2.length; i++)

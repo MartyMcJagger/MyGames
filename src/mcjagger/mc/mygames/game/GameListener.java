@@ -46,8 +46,10 @@ public class GameListener implements Listener {
 	@EventHandler
 	public void onLogout(PlayerQuitEvent event) {
 		Game gm = MyGames.getLobbyManager().getGame(MyGames.getLobbyManager().getCurrentGame(event.getPlayer().getUniqueId()));
-		if (gm != null && game.equals(gm))
-			gm.removePlayer(event.getPlayer().getUniqueId());
+		if (gm != null && game.equals(gm)) {
+			gm.playerDied(event.getPlayer().getUniqueId());
+			MyGames.getLobbyManager().removePlayer(event.getPlayer(), gm.getName());
+		}
 	}
 	
 	@EventHandler
@@ -205,7 +207,7 @@ public class GameListener implements Listener {
 		if (event.getCause() == DamageCause.VOID) {
 			event.setDamage(20d);
 			
-			if (player.getGameMode() == GameMode.SPECTATOR) {
+			if (player.getGameMode() == GameMode.SPECTATOR || !game.isRunning()) {
 				MyGames.getLobbyManager().addSpectator(player, game);
 				return;
 			}
@@ -214,12 +216,14 @@ public class GameListener implements Listener {
 		boolean cancel = false;
 		
 		cancel |= (!game.doFallDamage()) && (event.getCause() == DamageCause.FALL);
-		// cancel |= game.state != GameState.RUNNING;
+		cancel |= game.state != GameState.RUNNING;
 		
 		if (cancel) {
 			event.setDamage(0.0);
 			event.setCancelled(true);
 			return;
+		} else {
+			game.playerDamaged(event);
 		}
 
 		/*
@@ -313,9 +317,10 @@ public class GameListener implements Listener {
 	@EventHandler
 	public final void onBlockBreakEvent(BlockBreakEvent event) {
 		if (game.hasPlayer(event.getPlayer()) && !game.allowBlockBreak) {
-
-			event.setCancelled(true);
-			event.getPlayer().sendMessage(MyGames.getChatManager().actionNotAllowed());
+			if (!game.allowedBlockBreak.contains(event.getBlock().getType())) {
+				event.setCancelled(true);
+				event.getPlayer().sendMessage(MyGames.getChatManager().actionNotAllowed());
+			}
 		}
 	}
 	
